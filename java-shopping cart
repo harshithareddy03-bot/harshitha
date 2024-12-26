@@ -1,0 +1,146 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Item {
+    String name;
+    double price;
+
+    // Constructor to initialize an item
+    public Item(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Method to display item details
+    @Override
+    public String toString() {
+        return name + " - $" + price;
+    }
+}
+
+class ShoppingCart {
+    private ArrayList<Item> cart;
+    
+    // Constructor
+    public ShoppingCart() {
+        cart = new ArrayList<>();
+    }
+
+    // Add item to the cart
+    public void addItem(Item item) {
+        cart.add(item);
+        System.out.println(item.name + " has been added to your cart.");
+    }
+
+    // Remove item from the cart
+    public void removeItem(String itemName) {
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart.get(i).name.equalsIgnoreCase(itemName)) {
+                cart.remove(i);
+                System.out.println(itemName + " has been removed from your cart.");
+                return;
+            }
+        }
+        System.out.println("Item not found in cart.");
+    }
+
+    // View all items in the cart
+    public void viewItems() {
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty.");
+            return;
+        }
+        System.out.println("Items in your cart:");
+        for (Item item : cart) {
+            System.out.println(item);
+        }
+    }
+
+    // Calculate total price of items in the cart
+    public double calculateTotal() {
+        double total = 0.0;
+        for (Item item : cart) {
+            total += item.price;
+        }
+        return total;
+    }
+}
+
+public class ShoppingCartApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ShoppingCart shoppingCart = new ShoppingCart();
+
+        // Sample items available in the store
+        Item item1 = new Item("Laptop", 799.99);
+        Item item2 = new Item("Smartphone", 599.99);
+        Item item3 = new Item("Headphones", 99.99);
+        Item item4 = new Item("Smartwatch", 199.99);
+
+        // Store menu
+        while (true) {
+            System.out.println("\n--- Shopping Cart Menu ---");
+            System.out.println("1. Add Item to Cart");
+            System.out.println("2. Remove Item from Cart");
+            System.out.println("3. View Items in Cart");
+            System.out.println("4. View Total Price");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice (1-5): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Available Items:");
+                    System.out.println("1. " + item1);
+                    System.out.println("2. " + item2);
+                    System.out.println("3. " + item3);
+                    System.out.println("4. " + item4);
+                    System.out.print("Enter the item number to add to cart: ");
+                    int addChoice = scanner.nextInt();
+                    scanner.nextLine();  // Consume newline character
+
+                    switch (addChoice) {
+                        case 1:
+                            shoppingCart.addItem(item1);
+                            break;
+                        case 2:
+                            shoppingCart.addItem(item2);
+                            break;
+                        case 3:
+                            shoppingCart.addItem(item3);
+                            break;
+                        case 4:
+                            shoppingCart.addItem(item4);
+                            break;
+                        default:
+                            System.out.println("Invalid item number.");
+                    }
+                    break;
+
+                case 2:
+                    shoppingCart.viewItems();
+                    System.out.print("Enter the name of the item to remove: ");
+                    String itemName = scanner.nextLine();
+                    shoppingCart.removeItem(itemName);
+                    break;
+
+                case 3:
+                    shoppingCart.viewItems();
+                    break;
+
+                case 4:
+                    System.out.println("Total Price: $" + shoppingCart.calculateTotal());
+                    break;
+
+                case 5:
+                    System.out.println("Thank you for shopping!");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
