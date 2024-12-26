@@ -1,0 +1,142 @@
+import os
+import datetime
+
+# Task Class to represent individual tasks
+class Task:
+    def __init__(self, name, due_date=None, priority=3, is_completed=False):
+        self.name = name
+        self.due_date = due_date if due_date else "No Due Date"
+        self.priority = priority
+        self.is_completed = is_completed
+
+    def mark_completed(self):
+        self.is_completed = True
+
+    def __str__(self):
+        completion_status = "Completed" if self.is_completed else "Not Completed"
+        return f"[{completion_status}] {self.name} | Due: {self.due_date} | Priority: {self.priority}"
+
+# ToDoList Class to manage tasks
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+        self.load_tasks()
+
+    def add_task(self, name, due_date=None, priority=3):
+        new_task = Task(name, due_date, priority)
+        self.tasks.append(new_task)
+        print(f"Task '{name}' added successfully.")
+
+    def view_tasks(self):
+        if not self.tasks:
+            print("No tasks available.")
+            return
+        for idx, task in enumerate(self.tasks, start=1):
+            print(f"{idx}. {task}")
+
+    def remove_task(self, index):
+        if 0 < index <= len(self.tasks):
+            removed_task = self.tasks.pop(index - 1)
+            print(f"Task '{removed_task.name}' removed successfully.")
+        else:
+            print("Invalid task number.")
+
+    def mark_task_completed(self, index):
+        if 0 < index <= len(self.tasks):
+            self.tasks[index - 1].mark_completed()
+            print(f"Task '{self.tasks[index - 1].name}' marked as completed.")
+        else:
+            print("Invalid task number.")
+
+    def sort_by_priority(self):
+        self.tasks.sort(key=lambda x: x.priority)
+        print("Tasks sorted by priority.")
+
+    def sort_by_due_date(self):
+        self.tasks.sort(key=lambda x: (x.due_date if x.due_date != "No Due Date" else "9999-12-31"))
+        print("Tasks sorted by due date.")
+
+    def save_tasks(self):
+        with open("tasks.txt", "w") as file:
+            for task in self.tasks:
+                file.write(f"{task.name}|{task.due_date}|{task.priority}|{task.is_completed}\n")
+        print("Tasks saved to 'tasks.txt'.")
+
+    def load_tasks(self):
+        if os.path.exists("tasks.txt"):
+            with open("tasks.txt", "r") as file:
+                for line in file:
+                    name, due_date, priority, is_completed = line.strip().split('|')
+                    task = Task(name, due_date, int(priority), is_completed == "True")
+                    self.tasks.append(task)
+            print("Tasks loaded from 'tasks.txt'.")
+
+# Helper function to display menu and handle user input
+def display_menu():
+    print("\nTask Manager Menu:")
+    print("1. Add Task")
+    print("2. View Tasks")
+    print("3. Remove Task")
+    print("4. Mark Task Completed")
+    print("5. Sort Tasks by Priority")
+    print("6. Sort Tasks by Due Date")
+    print("7. Save Tasks")
+    print("8. Load Tasks")
+    print("9. Exit")
+    choice = input("Choose an option (1-9): ")
+    return choice
+
+# Main program to interact with user and perform task operations
+def main():
+    task_manager = ToDoList()
+
+    while True:
+        choice = display_menu()
+
+        if choice == '1':
+            task_name = input("Enter task name: ")
+            due_date = input("Enter due date (YYYY-MM-DD) or press Enter for no due date: ")
+            priority = input("Enter task priority (1 - High, 2 - Medium, 3 - Low): ")
+            priority = int(priority) if priority.isdigit() else 3
+            due_date = due_date if due_date else None
+            task_manager.add_task(task_name, due_date, priority)
+
+        elif choice == '2':
+            print("\nYour Tasks:")
+            task_manager.view_tasks()
+
+        elif choice == '3':
+            task_num = input("Enter task number to remove: ")
+            if task_num.isdigit():
+                task_manager.remove_task(int(task_num))
+
+        elif choice == '4':
+            task_num = input("Enter task number to mark as completed: ")
+            if task_num.isdigit():
+                task_manager.mark_task_completed(int(task_num))
+
+        elif choice == '5':
+            task_manager.sort_by_priority()
+
+        elif choice == '6':
+            task_manager.sort_by_due_date()
+
+        elif choice == '7':
+            task_manager.save_tasks()
+
+        elif choice == '8':
+            task_manager.load_tasks()
+
+        elif choice == '9':
+            print("Exiting program...")
+            task_manager.save_tasks()  # Save before exiting
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
+            
