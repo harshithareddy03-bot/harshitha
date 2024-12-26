@@ -1,0 +1,70 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class RegistrationForm extends JFrame implements ActionListener {
+    
+    // Declaring all form components
+    private JLabel lblName, lblEmail, lblPhone, lblMessage;
+    private JTextField txtName, txtEmail, txtPhone;
+    private JButton btnSubmit;
+    
+    // Constructor to initialize the frame and components
+    public RegistrationForm() {
+        setTitle("Registration Form");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new FlowLayout());
+
+        // Initializing components
+        lblName = new JLabel("Name:");
+        lblEmail = new JLabel("Email:");
+        lblPhone = new JLabel("Phone Number:");
+        lblMessage = new JLabel();
+        
+        txtName = new JTextField(20);
+        txtEmail = new JTextField(20);
+        txtPhone = new JTextField(20);
+        
+        btnSubmit = new JButton("Submit");
+
+        // Adding components to the frame
+        add(lblName);
+        add(txtName);
+        
+        add(lblEmail);
+        add(txtEmail);
+        
+        add(lblPhone);
+        add(txtPhone);
+        
+        add(btnSubmit);
+        add(lblMessage);
+
+        // Adding action listener to the submit button
+        btnSubmit.addActionListener(this);
+    }
+
+    // Action listener to handle form submission
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Capture user input
+        String name = txtName.getText();
+        String email = txtEmail.getText();
+        String phone = txtPhone.getText();
+
+        // Basic validation
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            lblMessage.setText("Please fill in all fields!");
+            lblMessage.setForeground(Color.RED);
+        } else {
+            lblMessage.setText("<html><b>Registration Successful!</b><br>Name: " + name + "<br>Email: " + email + "<br>Phone: " + phone + "</html>");
+            lblMessage.setForeground(Color.GREEN);
+        }
+    }
+
+    // Main method to run the application
+    public static void main(String[] args) {
+        /
